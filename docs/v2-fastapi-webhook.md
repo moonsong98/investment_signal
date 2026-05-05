@@ -55,6 +55,10 @@ TELEGRAM_CHAT_ID=...
 
 Do not commit real values.
 
+Avoid running `docker compose config` after real secrets are placed in `.env`.
+It expands environment values and can print tokens or webhook secrets to the
+terminal.
+
 ## Expected Behavior
 
 - Level 1: accepted, no Telegram notification

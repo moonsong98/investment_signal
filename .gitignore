@@ -65,6 +65,7 @@ data/holdings/
 data/positions/
 data/orders/
 data/fills/
+data/events/*.jsonl
 data/events/raw/
 data/events/private/
 data/logs/
