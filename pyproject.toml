@@ -5,3 +5,17 @@ description = "Personal investment research and alert agent"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = []
+
+[project.optional-dependencies]
+api = [
+    "fastapi>=0.115.0",
+    "httpx>=0.27.0",
+    "uvicorn[standard]>=0.30.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/investment"]

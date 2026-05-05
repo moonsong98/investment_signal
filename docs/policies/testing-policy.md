@@ -14,6 +14,12 @@ Static site build command:
 uv run python scripts/build_site.py
 ```
 
+Webhook API test command:
+
+```bash
+uv run --extra api python -m unittest discover -s tests
+```
+
 Test priorities:
 - Alert schema parsing
 - Severity classification

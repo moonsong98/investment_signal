@@ -243,6 +243,8 @@ def build_section(section: str, title: str) -> None:
 def load_sample_alerts() -> list[dict[str, Any]]:
     alerts = []
     for path in sorted((DATA_DIR / "samples").glob("tradingview_alert_*.json")):
+        if "invalid" in path.stem:
+            continue
         payload = json.loads(read_text(path))
         severity = classify_alert_type(str(payload["alert_type"]))
         alerts.append(

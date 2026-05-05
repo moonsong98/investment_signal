@@ -6,3 +6,5 @@
 - Validate webhook shared secrets before processing payloads.
 - Redact sensitive fields before logging or publishing.
 - Keep `.env.example` updated with names only, not real values.
+- Keep `.dockerignore` aligned with `.gitignore` so local secrets and account
+  exports are not sent in Docker build contexts.

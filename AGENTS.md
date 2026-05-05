@@ -85,6 +85,7 @@ Use these commands when available:
 ```bash
 uv run python main.py
 uv run python scripts/build_site.py
+uv run --extra api uvicorn investment.api.app:app --reload --host 127.0.0.1 --port 8000
 uv run python -m unittest discover -s tests
 ```
 
