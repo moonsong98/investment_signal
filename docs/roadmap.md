@@ -45,6 +45,7 @@ Acceptance criteria:
 - Level 3 sample event creates a research note draft.
 - Level 1 and Level 2 events do not call LLM.
 - Sensitive fields are redacted before publication.
+- Initial implementation may use deterministic note templates before real LLM API calls.
 
 ## v4: Paper Trading Experiment
 

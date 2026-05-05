@@ -49,6 +49,12 @@ Send a safe local sample alert:
 uv run python scripts/send_sample_alert.py
 ```
 
+Generate Level 3 research note drafts:
+
+```bash
+uv run python scripts/generate_research_notes.py
+```
+
 ## Test
 
 ```bash
