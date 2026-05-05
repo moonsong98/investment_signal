@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from investment.llm import AnalysisPolicy, EventAnalysis, analyze_event
+
 
 NOTE_HEADER = "Generated Research Note Draft"
 
@@ -46,7 +48,26 @@ def note_filename(event: dict[str, Any]) -> str:
     return f"{event_at}-{symbol}-{alert_type}{suffix}.md"
 
 
-def render_note(event: dict[str, Any]) -> str:
+def render_analysis(analysis: EventAnalysis) -> str:
+    risk_points = "\n".join(f"- {point}" for point in analysis.risk_points)
+    questions = "\n".join(f"- {question}" for question in analysis.follow_up_questions)
+    return f"""## Analysis Draft
+
+LLM Used: {str(analysis.llm_used).lower()}
+
+{analysis.summary}
+
+## Analysis Risk Points
+
+{risk_points}
+
+## Analysis Follow-Up Questions
+
+{questions}
+"""
+
+
+def render_note(event: dict[str, Any], analysis: EventAnalysis | None = None) -> str:
     payload = event.get("payload") or {}
     symbol = str(event.get("symbol", "UNKNOWN"))
     alert_type = str(event.get("alert_type", "unknown_event"))
@@ -57,13 +78,15 @@ def render_note(event: dict[str, Any]) -> str:
     timeframe = str(event.get("timeframe", ""))
     message = str(payload.get("message", ""))
     price = payload.get("price")
+    event_analysis = analysis or analyze_event(event, AnalysisPolicy())
+    analysis_section = render_analysis(event_analysis)
 
     price_line = f"\n- Price: {price}" if price is not None else ""
     return f"""# {NOTE_HEADER}: {symbol} {alert_type}
 
 Status: draft
 Human Review: required
-LLM Used: false
+LLM Used: {str(event_analysis.llm_used).lower()}
 
 ## Event Summary
 
@@ -75,6 +98,8 @@ LLM Used: false
 - Event Time: {event_at}
 - Received Time: {received_at}{price_line}
 - Message: {message}
+
+{analysis_section}
 
 ## Initial Interpretation
 
@@ -103,6 +128,7 @@ trading decision.
 def generate_research_note_for_event(
     event: dict[str, Any],
     output_dir: Path | str,
+    analysis_policy: AnalysisPolicy | None = None,
 ) -> GeneratedNote | None:
     if not is_level_3_event(event):
         return None
@@ -110,7 +136,8 @@ def generate_research_note_for_event(
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
     note_path = output_path / note_filename(event)
-    note_path.write_text(render_note(event), encoding="utf-8")
+    analysis = analyze_event(event, analysis_policy or AnalysisPolicy())
+    note_path.write_text(render_note(event, analysis), encoding="utf-8")
     return GeneratedNote(
         event_id=str(event.get("event_id", "")),
         path=note_path,
@@ -121,13 +148,14 @@ def generate_research_note_for_event(
 def generate_research_notes(
     event_dir: Path | str,
     output_dir: Path | str,
+    analysis_policy: AnalysisPolicy | None = None,
 ) -> list[GeneratedNote]:
     notes: list[GeneratedNote] = []
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
     for event in iter_event_logs(event_dir):
-        note = generate_research_note_for_event(event, output_path)
+        note = generate_research_note_for_event(event, output_path, analysis_policy)
         if note is not None:
             notes.append(note)
     return notes

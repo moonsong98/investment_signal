@@ -57,6 +57,8 @@ class ResearchNoteGeneratorTests(unittest.TestCase):
             self.assertIn("Generated Research Note Draft", note_text)
             self.assertIn("Human Review: required", note_text)
             self.assertIn("LLM Used: false", note_text)
+            self.assertIn("## Analysis Draft", note_text)
+            self.assertIn("not as a trade decision", note_text)
             self.assertIn("Do not place live orders", note_text)
             self.assertNotIn("level_2-event-id", note_text)
 
