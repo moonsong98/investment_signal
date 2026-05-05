@@ -31,6 +31,12 @@ Do not commit real credentials, broker account IDs, API tokens, webhook secrets,
 uv run python main.py
 ```
 
+## Build Site
+
+```bash
+uv run python scripts/build_site.py
+```
+
 ## Test
 
 ```bash

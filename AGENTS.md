@@ -84,6 +84,8 @@ Use these commands when available:
 
 ```bash
 uv run python main.py
+uv run python scripts/build_site.py
+uv run python -m unittest discover -s tests
 ```
 
 When dependencies, tests, linting, or formatting tools are added, update this section.

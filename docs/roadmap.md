@@ -20,6 +20,7 @@ Acceptance criteria:
 Acceptance criteria:
 - Static content can be previewed locally and published to GitHub Pages.
 - Sample alert logs and research notes are visible without secrets.
+- The site builds with `uv run python scripts/build_site.py`.
 
 ## v2: TradingView Alert To Telegram
 

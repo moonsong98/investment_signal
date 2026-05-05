@@ -1,0 +1,29 @@
+[
+  {
+    "file": "tradingview_alert_level1.json",
+    "symbol": "SPY",
+    "alert_type": "rsi_overbought",
+    "timeframe": "1D",
+    "event_at": "2026-05-05T13:30:00Z",
+    "severity": "level_1",
+    "message": "RSI moved above 70"
+  },
+  {
+    "file": "tradingview_alert_level2.json",
+    "symbol": "SPY",
+    "alert_type": "breakout_20d_high",
+    "timeframe": "1D",
+    "event_at": "2026-05-05T13:30:00Z",
+    "severity": "level_2",
+    "message": "20-day high breakout"
+  },
+  {
+    "file": "tradingview_alert_level3.json",
+    "symbol": "NVDA",
+    "alert_type": "earnings_shock_support_breakdown",
+    "timeframe": "1D",
+    "event_at": "2026-05-05T20:30:00Z",
+    "severity": "level_3",
+    "message": "Earnings shock and key support breakdown"
+  }
+]
