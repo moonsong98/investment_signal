@@ -47,6 +47,8 @@ Acceptance criteria:
 - Sensitive fields are redacted before publication.
 - Initial implementation may use deterministic note templates before real LLM API calls.
 - Draft notes should stay in `content/research/drafts/` until human review.
+- Reviewed drafts can be promoted into public research content with
+  `scripts/promote_research_draft.py`.
 
 ## v4: Paper Trading Experiment
 

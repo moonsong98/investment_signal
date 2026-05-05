@@ -58,6 +58,12 @@ uv run python scripts/generate_research_notes.py
 Generated drafts are written to `content/research/drafts/` by default and are
 ignored by git until a human reviews and promotes them.
 
+Promote a reviewed draft:
+
+```bash
+uv run python scripts/promote_research_draft.py content/research/drafts/<draft>.md
+```
+
 ## Test
 
 ```bash
