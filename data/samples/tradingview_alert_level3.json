@@ -1,0 +1,11 @@
+{
+  "secret": "replace-with-local-secret",
+  "source": "tradingview",
+  "symbol": "NVDA",
+  "asset_type": "stock",
+  "timeframe": "1D",
+  "alert_type": "earnings_shock_support_breakdown",
+  "event_at": "2026-05-05T20:30:00Z",
+  "price": 780.0,
+  "message": "Earnings shock and key support breakdown"
+}

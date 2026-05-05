@@ -1,0 +1,7 @@
+[project]
+name = "investment"
+version = "0.1.0"
+description = "Personal investment research and alert agent"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []

@@ -1,0 +1,26 @@
+[
+  {
+    "symbol": "SPY",
+    "name": "SPDR S&P 500 ETF Trust",
+    "asset_type": "etf",
+    "market": "US",
+    "currency": "USD",
+    "thesis": "Broad US equity market risk and trend proxy.",
+    "risk_notes": "Macro sensitivity, valuation compression, liquidity shocks.",
+    "tags": ["index", "risk-on"],
+    "priority": 1,
+    "active": true
+  },
+  {
+    "symbol": "DXY",
+    "name": "US Dollar Index",
+    "asset_type": "macro",
+    "market": "GLOBAL",
+    "currency": "USD",
+    "thesis": "Dollar strength indicator for liquidity and FX pressure.",
+    "risk_notes": "Symbol availability differs by data provider.",
+    "tags": ["fx", "macro", "liquidity"],
+    "priority": 1,
+    "active": true
+  }
+]

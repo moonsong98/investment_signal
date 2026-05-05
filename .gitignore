@@ -1,0 +1,22 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local secrets and private data
+.env
+.env.*
+!.env.example
+data/private/
+content/private/
+
+# Local test/cache output
+.coverage
+.pytest_cache/
+.ruff_cache/

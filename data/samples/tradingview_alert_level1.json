@@ -1,0 +1,11 @@
+{
+  "secret": "replace-with-local-secret",
+  "source": "tradingview",
+  "symbol": "SPY",
+  "asset_type": "etf",
+  "timeframe": "1D",
+  "alert_type": "rsi_overbought",
+  "event_at": "2026-05-05T13:30:00Z",
+  "price": 520.0,
+  "message": "RSI moved above 70"
+}
