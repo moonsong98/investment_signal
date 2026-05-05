@@ -8,6 +8,7 @@ from fastapi import FastAPI, HTTPException, status
 
 from investment.alerts import AlertValidationError, validate_tradingview_payload
 from investment.config import Settings
+from investment.logging import JsonlEventLogger
 from investment.notifications import TelegramNotifier
 
 
@@ -38,9 +39,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             dry_run=app_settings.telegram_dry_run,
         )
         notification = notifier.send_alert(alert)
+        logged_event = JsonlEventLogger(app_settings.event_log_dir).log_alert(
+            alert=alert,
+            raw_payload=payload,
+            notification=notification,
+        )
 
         return {
             "ok": True,
+            "event_id": logged_event.event_id,
             "symbol": alert.symbol,
             "alert_type": alert.alert_type,
             "severity": alert.severity.value,
