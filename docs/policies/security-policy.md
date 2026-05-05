@@ -8,3 +8,5 @@
 - Keep `.env.example` updated with names only, not real values.
 - Keep `.dockerignore` aligned with `.gitignore` so local secrets and account
   exports are not sent in Docker build contexts.
+- Run `uv run python scripts/check_public_output.py` before publishing or
+  committing generated public site output.

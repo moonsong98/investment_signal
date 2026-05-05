@@ -70,6 +70,12 @@ uv run python scripts/promote_research_draft.py content/research/drafts/<draft>.
 uv run python -m unittest discover -s tests
 ```
 
+Scan public output before publishing:
+
+```bash
+uv run python scripts/check_public_output.py
+```
+
 ## Roadmap
 
 See [`docs/roadmap.md`](docs/roadmap.md).
