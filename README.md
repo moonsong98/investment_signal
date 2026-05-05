@@ -55,6 +55,9 @@ Generate Level 3 research note drafts:
 uv run python scripts/generate_research_notes.py
 ```
 
+Generated drafts are written to `content/research/drafts/` by default and are
+ignored by git until a human reviews and promotes them.
+
 ## Test
 
 ```bash

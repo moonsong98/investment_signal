@@ -76,6 +76,7 @@ data/tax/
 content/private/
 content/**/private/
 content/**/*private*
+content/research/drafts/
 content/account/
 content/accounts/
 content/holdings/

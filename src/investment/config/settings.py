@@ -38,5 +38,5 @@ class Settings:
             telegram_dry_run=env_bool("TELEGRAM_DRY_RUN", True),
             event_log_dir=Path(os.getenv("EVENT_LOG_DIR", "data/events")),
             enable_research_notes=env_bool("ENABLE_RESEARCH_NOTES", True),
-            research_note_dir=Path(os.getenv("RESEARCH_NOTE_DIR", "content/research")),
+            research_note_dir=Path(os.getenv("RESEARCH_NOTE_DIR", "content/research/drafts")),
         )

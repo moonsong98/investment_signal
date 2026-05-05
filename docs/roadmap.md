@@ -46,6 +46,7 @@ Acceptance criteria:
 - Level 1 and Level 2 events do not call LLM.
 - Sensitive fields are redacted before publication.
 - Initial implementation may use deterministic note templates before real LLM API calls.
+- Draft notes should stay in `content/research/drafts/` until human review.
 
 ## v4: Paper Trading Experiment
 
