@@ -35,6 +35,7 @@ class LoggedEvent:
     timeframe: str
     alert_type: str
     event_at: str
+    dedupe_key: str
     severity: str
     notification: dict[str, Any]
     payload: dict[str, Any]
@@ -72,6 +73,7 @@ class JsonlEventLogger:
             timeframe=alert.timeframe,
             alert_type=alert.alert_type,
             event_at=alert.event_at.isoformat(),
+            dedupe_key=alert.dedupe_key,
             severity=alert.severity.value,
             notification={
                 "sent": notification.sent,
@@ -82,6 +84,21 @@ class JsonlEventLogger:
         )
         self.write(event)
         return event
+
+    def has_dedupe_key(self, dedupe_key: str) -> bool:
+        if not self.log_dir.exists():
+            return False
+        for path in self.log_dir.glob("*.jsonl"):
+            for raw_line in path.read_text(encoding="utf-8").splitlines():
+                if not raw_line.strip():
+                    continue
+                try:
+                    event = json.loads(raw_line)
+                except json.JSONDecodeError:
+                    continue
+                if event.get("dedupe_key") == dedupe_key:
+                    return True
+        return False
 
     def write(self, event: LoggedEvent) -> None:
         self.log_dir.mkdir(parents=True, exist_ok=True)

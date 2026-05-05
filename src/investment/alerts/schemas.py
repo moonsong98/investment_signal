@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+from hashlib import sha256
 from typing import Any
 
 from investment.models import AssetType, EventSource, Severity
@@ -37,6 +38,26 @@ class TradingViewAlert:
     message: str
     price: float | None
     severity: Severity
+    dedupe_key: str
+
+
+def build_dedupe_key(
+    source: EventSource,
+    symbol: str,
+    timeframe: str,
+    alert_type: str,
+    event_at: datetime,
+) -> str:
+    raw = "|".join(
+        [
+            source.value,
+            symbol.upper(),
+            timeframe,
+            alert_type.lower(),
+            event_at.isoformat(),
+        ]
+    )
+    return sha256(raw.encode("utf-8")).hexdigest()
 
 
 def parse_event_time(value: Any) -> datetime:
@@ -95,14 +116,16 @@ def validate_tradingview_payload(
         except (TypeError, ValueError) as exc:
             raise AlertValidationError("price must be numeric when provided") from exc
 
+    event_at = parse_event_time(payload["event_at"])
     return TradingViewAlert(
         source=source,
         symbol=symbol,
         asset_type=asset_type,
         timeframe=timeframe,
         alert_type=alert_type,
-        event_at=parse_event_time(payload["event_at"]),
+        event_at=event_at,
         message=message,
         price=price,
         severity=classify_alert_type(alert_type),
+        dedupe_key=build_dedupe_key(source, symbol, timeframe, alert_type, event_at),
     )

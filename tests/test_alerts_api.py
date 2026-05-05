@@ -31,6 +31,7 @@ class AlertValidationTests(unittest.TestCase):
 
         self.assertEqual(alert.symbol, "SPY")
         self.assertEqual(alert.severity, Severity.LEVEL_2)
+        self.assertEqual(len(alert.dedupe_key), 64)
 
     def test_invalid_secret_rejected(self) -> None:
         payload = self.load_payload("tradingview_alert_invalid_secret.json")
@@ -107,6 +108,7 @@ class EventLoggerTests(unittest.TestCase):
             self.assertEqual(len(log_files), 1)
             serialized = log_files[0].read_text()
             self.assertIn(event.event_id, serialized)
+            self.assertIn(alert.dedupe_key, serialized)
             self.assertIn("[REDACTED]", serialized)
             self.assertNotIn("replace-with-local-secret", serialized)
 
@@ -151,9 +153,23 @@ class FastApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         body = response.json()
         self.assertEqual(body["severity"], "level_2")
+        self.assertEqual(body["duplicate"], False)
         self.assertIn("event_id", body)
         self.assertEqual(body["notification"]["reason"], "dry_run")
         self.assertEqual(body["research_note"]["created"], False)
+        self.assertEqual(len(list(Path(self.temp_dir.name).glob("*.jsonl"))), 1)
+
+    def test_webhook_skips_duplicate_payload(self) -> None:
+        payload = json.loads((ROOT / "data/samples/tradingview_alert_level2.json").read_text())
+
+        first = self.client.post("/webhooks/tradingview", json=payload)
+        second = self.client.post("/webhooks/tradingview", json=payload)
+
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(second.status_code, 200)
+        body = second.json()
+        self.assertEqual(body["duplicate"], True)
+        self.assertEqual(body["notification"]["reason"], "duplicate")
         self.assertEqual(len(list(Path(self.temp_dir.name).glob("*.jsonl"))), 1)
 
     def test_webhook_generates_research_note_for_level_3(self) -> None:

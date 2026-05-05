@@ -35,13 +35,29 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 detail=str(exc),
             ) from exc
 
+        event_logger = JsonlEventLogger(app_settings.event_log_dir)
+        if event_logger.has_dedupe_key(alert.dedupe_key):
+            return {
+                "ok": True,
+                "duplicate": True,
+                "symbol": alert.symbol,
+                "alert_type": alert.alert_type,
+                "severity": alert.severity.value,
+                "notification": {
+                    "sent": False,
+                    "dry_run": app_settings.telegram_dry_run,
+                    "reason": "duplicate",
+                },
+                "research_note": {"created": False},
+            }
+
         notifier = TelegramNotifier(
             bot_token=app_settings.telegram_bot_token,
             chat_id=app_settings.telegram_chat_id,
             dry_run=app_settings.telegram_dry_run,
         )
         notification = notifier.send_alert(alert)
-        logged_event = JsonlEventLogger(app_settings.event_log_dir).log_alert(
+        logged_event = event_logger.log_alert(
             alert=alert,
             raw_payload=payload,
             notification=notification,
@@ -55,6 +71,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
         response = {
             "ok": True,
+            "duplicate": False,
             "event_id": logged_event.event_id,
             "symbol": alert.symbol,
             "alert_type": alert.alert_type,
