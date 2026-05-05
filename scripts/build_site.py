@@ -261,6 +261,31 @@ def load_sample_alerts() -> list[dict[str, Any]]:
     return alerts
 
 
+def load_event_logs() -> list[dict[str, Any]]:
+    events = []
+    for path in sorted((DATA_DIR / "events").glob("*.jsonl")):
+        for raw_line in path.read_text(encoding="utf-8").splitlines():
+            if not raw_line.strip():
+                continue
+            event = json.loads(raw_line)
+            notification = event.get("notification") or {}
+            payload = event.get("payload") or {}
+            events.append(
+                {
+                    "received_at": event.get("received_at", ""),
+                    "event_at": event.get("event_at", ""),
+                    "symbol": event.get("symbol", ""),
+                    "asset_type": event.get("asset_type", ""),
+                    "alert_type": event.get("alert_type", ""),
+                    "timeframe": event.get("timeframe", ""),
+                    "severity": event.get("severity", ""),
+                    "notification_reason": notification.get("reason", ""),
+                    "message": payload.get("message", ""),
+                }
+            )
+    return sorted(events, key=lambda item: item["received_at"], reverse=True)
+
+
 def load_watchlist() -> list[dict[str, Any]]:
     return json.loads(read_text(DATA_DIR / "watchlists/watchlist.example.json"))
 
@@ -310,8 +335,11 @@ def build_watchlist() -> None:
 
 
 def build_events() -> None:
+    events = load_event_logs()
+    source_label = "Event Logs" if events else "Sample Alert Events"
+    event_rows = events or load_sample_alerts()
     rows = []
-    for alert in load_sample_alerts():
+    for alert in event_rows:
         rows.append(
             "<tr>"
             f"<td>{escape(alert['event_at'])}</td>"
@@ -319,23 +347,25 @@ def build_events() -> None:
             f"<td>{escape(alert['alert_type'])}</td>"
             f"<td>{escape(alert['timeframe'])}</td>"
             f"<td><span class=\"severity {escape(alert['severity'])}\">{escape(alert['severity'])}</span></td>"
+            f"<td>{escape(str(alert.get('notification_reason', 'sample')))}</td>"
             f"<td>{escape(alert['message'])}</td>"
             "</tr>"
         )
 
     body = f"""
-    <h1>Sample Alert Events</h1>
-    <p>These events are generated from local sample payloads. Secrets and raw
-    payloads are not published to the static site.</p>
+    <h1>{escape(source_label)}</h1>
+    <p>These events are generated from redacted JSONL logs when available, and
+    from local sample payloads otherwise. Secrets and raw payloads are not
+    published to the static site.</p>
     <table>
       <thead>
-        <tr><th>Event Time</th><th>Symbol</th><th>Alert</th><th>Timeframe</th><th>Severity</th><th>Message</th></tr>
+        <tr><th>Event Time</th><th>Symbol</th><th>Alert</th><th>Timeframe</th><th>Severity</th><th>Notification</th><th>Message</th></tr>
       </thead>
       <tbody>{''.join(rows)}</tbody>
     </table>
     """
-    write_text(SITE_DIR / "events.html", page_shell("Sample Alert Events", body))
-    write_text(SITE_DIR / "events.json", json.dumps(load_sample_alerts(), indent=2))
+    write_text(SITE_DIR / "events.html", page_shell(source_label, body))
+    write_text(SITE_DIR / "events.json", json.dumps(event_rows, indent=2))
 
 
 def build_styles() -> None:

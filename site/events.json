@@ -1,29 +1,35 @@
 [
   {
-    "file": "tradingview_alert_level1.json",
+    "received_at": "2026-05-05T17:26:56.547499+00:00",
+    "event_at": "2026-05-05T13:30:00+00:00",
     "symbol": "SPY",
-    "alert_type": "rsi_overbought",
-    "timeframe": "1D",
-    "event_at": "2026-05-05T13:30:00Z",
-    "severity": "level_1",
-    "message": "RSI moved above 70"
-  },
-  {
-    "file": "tradingview_alert_level2.json",
-    "symbol": "SPY",
+    "asset_type": "etf",
     "alert_type": "breakout_20d_high",
     "timeframe": "1D",
-    "event_at": "2026-05-05T13:30:00Z",
     "severity": "level_2",
+    "notification_reason": "sent",
     "message": "20-day high breakout"
   },
   {
-    "file": "tradingview_alert_level3.json",
-    "symbol": "NVDA",
-    "alert_type": "earnings_shock_support_breakdown",
+    "received_at": "2026-05-05T17:25:57.663157+00:00",
+    "event_at": "2026-05-05T13:30:00+00:00",
+    "symbol": "SPY",
+    "asset_type": "etf",
+    "alert_type": "breakout_20d_high",
     "timeframe": "1D",
-    "event_at": "2026-05-05T20:30:00Z",
-    "severity": "level_3",
-    "message": "Earnings shock and key support breakdown"
+    "severity": "level_2",
+    "notification_reason": "dry_run",
+    "message": "20-day high breakout"
+  },
+  {
+    "received_at": "2026-05-05T17:24:54.445368+00:00",
+    "event_at": "2026-05-05T13:30:00+00:00",
+    "symbol": "SPY",
+    "asset_type": "etf",
+    "alert_type": "breakout_20d_high",
+    "timeframe": "1D",
+    "severity": "level_2",
+    "notification_reason": "dry_run",
+    "message": "20-day high breakout"
   }
 ]
