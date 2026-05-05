@@ -1,0 +1,72 @@
+[
+  {
+    "symbol": "SPY",
+    "name": "SPDR S&P 500 ETF Trust",
+    "asset_type": "etf",
+    "market": "US",
+    "currency": "USD",
+    "priority": 1,
+    "tags": [
+      "index",
+      "risk-on"
+    ],
+    "active": true
+  },
+  {
+    "symbol": "DXY",
+    "name": "US Dollar Index",
+    "asset_type": "macro",
+    "market": "GLOBAL",
+    "currency": "USD",
+    "priority": 1,
+    "tags": [
+      "fx",
+      "macro",
+      "liquidity"
+    ],
+    "active": true
+  },
+  {
+    "symbol": "BTC",
+    "name": "Bitcoin",
+    "asset_type": "crypto",
+    "market": "GLOBAL",
+    "currency": "USD",
+    "priority": 1,
+    "tags": [
+      "crypto",
+      "bitcoin",
+      "risk-on",
+      "liquidity"
+    ],
+    "active": true
+  },
+  {
+    "symbol": "ETH",
+    "name": "Ethereum",
+    "asset_type": "crypto",
+    "market": "GLOBAL",
+    "currency": "USD",
+    "priority": 2,
+    "tags": [
+      "crypto",
+      "smart-contracts",
+      "risk-on"
+    ],
+    "active": true
+  },
+  {
+    "symbol": "SOL",
+    "name": "Solana",
+    "asset_type": "crypto",
+    "market": "GLOBAL",
+    "currency": "USD",
+    "priority": 2,
+    "tags": [
+      "crypto",
+      "smart-contracts",
+      "growth"
+    ],
+    "active": true
+  }
+]

@@ -93,7 +93,7 @@ def page_shell(title: str, body: str) -> str:
 <body>
   <header>
     <a class="brand" href="index.html">Investment Research Lab</a>
-    <nav>{nav}<a href="events.html">Events</a></nav>
+    <nav>{nav}<a href="watchlist.html">Watchlist</a><a href="events.html">Events</a></nav>
   </header>
   <main>
     {body}
@@ -129,6 +129,11 @@ def build_index() -> None:
       <img src="assets/market-overview.png" alt="Sample market overview line chart">
     </section>
     <section class="grid">{cards}
+      <article class="card">
+        <h2>Watchlist</h2>
+        <p>Review monitored assets and research intent.</p>
+        <a href="watchlist.html">View</a>
+      </article>
       <article class="card">
         <h2>Event Logs</h2>
         <p>Review sample TradingView alerts and severity classification.</p>
@@ -252,6 +257,54 @@ def load_sample_alerts() -> list[dict[str, Any]]:
             }
         )
     return alerts
+
+
+def load_watchlist() -> list[dict[str, Any]]:
+    return json.loads(read_text(DATA_DIR / "watchlists/watchlist.example.json"))
+
+
+def build_watchlist() -> None:
+    rows = []
+    for item in load_watchlist():
+        rows.append(
+            "<tr>"
+            f"<td>{escape(item['symbol'])}</td>"
+            f"<td>{escape(item['name'])}</td>"
+            f"<td>{escape(item['asset_type'])}</td>"
+            f"<td>{escape(item['market'])}</td>"
+            f"<td>{escape(item['currency'])}</td>"
+            f"<td>{escape(str(item['priority']))}</td>"
+            f"<td>{escape(item['thesis'])}</td>"
+            f"<td>{escape(item['risk_notes'])}</td>"
+            "</tr>"
+        )
+
+    body = f"""
+    <h1>Watchlist</h1>
+    <p>Monitored assets for research and alerting. This page uses sample
+    public-safe data only and does not include holdings or position sizes.</p>
+    <table>
+      <thead>
+        <tr><th>Symbol</th><th>Name</th><th>Type</th><th>Market</th><th>Currency</th><th>Priority</th><th>Thesis</th><th>Risk Notes</th></tr>
+      </thead>
+      <tbody>{''.join(rows)}</tbody>
+    </table>
+    """
+    write_text(SITE_DIR / "watchlist.html", page_shell("Watchlist", body))
+    public_items = [
+        {
+            "symbol": item["symbol"],
+            "name": item["name"],
+            "asset_type": item["asset_type"],
+            "market": item["market"],
+            "currency": item["currency"],
+            "priority": item["priority"],
+            "tags": item["tags"],
+            "active": item["active"],
+        }
+        for item in load_watchlist()
+    ]
+    write_text(SITE_DIR / "watchlist.json", json.dumps(public_items, indent=2))
 
 
 def build_events() -> None:
@@ -463,6 +516,7 @@ def build_site() -> None:
     build_index()
     for section, title in CONTENT_SECTIONS.items():
         build_section(section, title)
+    build_watchlist()
     build_events()
 
 

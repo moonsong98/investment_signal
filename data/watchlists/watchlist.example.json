@@ -22,5 +22,41 @@
     "tags": ["fx", "macro", "liquidity"],
     "priority": 1,
     "active": true
+  },
+  {
+    "symbol": "BTC",
+    "name": "Bitcoin",
+    "asset_type": "crypto",
+    "market": "GLOBAL",
+    "currency": "USD",
+    "thesis": "Primary crypto market risk proxy and digital asset liquidity indicator.",
+    "risk_notes": "High volatility, regulatory uncertainty, liquidity cycles, custody and market structure risk.",
+    "tags": ["crypto", "bitcoin", "risk-on", "liquidity"],
+    "priority": 1,
+    "active": true
+  },
+  {
+    "symbol": "ETH",
+    "name": "Ethereum",
+    "asset_type": "crypto",
+    "market": "GLOBAL",
+    "currency": "USD",
+    "thesis": "Major smart contract platform and crypto risk appetite proxy.",
+    "risk_notes": "High volatility, regulatory uncertainty, protocol risk, liquidity cycles.",
+    "tags": ["crypto", "smart-contracts", "risk-on"],
+    "priority": 2,
+    "active": true
+  },
+  {
+    "symbol": "SOL",
+    "name": "Solana",
+    "asset_type": "crypto",
+    "market": "GLOBAL",
+    "currency": "USD",
+    "thesis": "High-throughput blockchain ecosystem and speculative growth proxy.",
+    "risk_notes": "High volatility, ecosystem concentration, outages, regulatory uncertainty.",
+    "tags": ["crypto", "smart-contracts", "growth"],
+    "priority": 2,
+    "active": true
   }
 ]

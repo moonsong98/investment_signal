@@ -34,6 +34,10 @@ class ModelTests(unittest.TestCase):
 
         self.assertGreaterEqual(len(items), 1)
         self.assertTrue(all(item.active for item in items))
+        self.assertEqual(
+            {"BTC", "ETH", "SOL"}.intersection({item.symbol for item in items}),
+            {"BTC", "ETH", "SOL"},
+        )
 
 
 class SeverityRuleTests(unittest.TestCase):

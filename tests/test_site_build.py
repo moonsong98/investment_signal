@@ -28,6 +28,8 @@ class SiteBuildTests(unittest.TestCase):
                 "research.html",
                 "macro.html",
                 "strategy.html",
+                "watchlist.html",
+                "watchlist.json",
                 "events.html",
                 "events.json",
                 "assets/market-overview.png",
@@ -56,6 +58,19 @@ class SiteBuildTests(unittest.TestCase):
                 [event["severity"] for event in events],
                 ["level_1", "level_2", "level_3"],
             )
+
+    def test_watchlist_json_includes_crypto_monitoring_scope(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            site_dir = Path(temp_dir)
+            with patch.object(build_site, "SITE_DIR", site_dir):
+                build_site.build_site()
+
+            watchlist = json.loads((site_dir / "watchlist.json").read_text())
+            symbols = {item["symbol"] for item in watchlist}
+
+            self.assertTrue({"BTC", "ETH", "SOL"}.issubset(symbols))
+            self.assertNotIn("thesis", watchlist[0])
+            self.assertNotIn("risk_notes", watchlist[0])
 
 
 if __name__ == "__main__":
