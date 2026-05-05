@@ -70,6 +70,11 @@ data/events/raw/
 data/events/private/
 data/logs/
 data/llm/
+!data/llm/
+data/llm/*
+!data/llm/.gitkeep
+!data/llm/usage/
+data/llm/usage/*.jsonl
 data/prompts/private/
 data/trades/live/
 data/tax/

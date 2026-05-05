@@ -7,5 +7,6 @@ services:
       - "8000:8000"
     volumes:
       - ./data/events:/app/data/events
+      - ./data/llm/usage:/app/data/llm/usage
       - ./content/research/drafts:/app/content/research/drafts
     restart: unless-stopped

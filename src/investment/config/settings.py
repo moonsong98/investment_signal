@@ -24,6 +24,10 @@ class Settings:
     event_log_dir: Path
     enable_research_notes: bool
     research_note_dir: Path
+    llm_dry_run: bool
+    llm_usage_dir: Path
+    llm_daily_limit: int
+    llm_monthly_limit: int
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -39,4 +43,8 @@ class Settings:
             event_log_dir=Path(os.getenv("EVENT_LOG_DIR", "data/events")),
             enable_research_notes=env_bool("ENABLE_RESEARCH_NOTES", True),
             research_note_dir=Path(os.getenv("RESEARCH_NOTE_DIR", "content/research/drafts")),
+            llm_dry_run=env_bool("LLM_DRY_RUN", True),
+            llm_usage_dir=Path(os.getenv("LLM_USAGE_DIR", "data/llm/usage")),
+            llm_daily_limit=int(os.getenv("LLM_DAILY_LIMIT", "5")),
+            llm_monthly_limit=int(os.getenv("LLM_MONTHLY_LIMIT", "50")),
         )

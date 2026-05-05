@@ -18,6 +18,11 @@ class DockerComposeConfigTests(unittest.TestCase):
 
         self.assertIn("./content/research/drafts:/app/content/research/drafts", compose)
 
+    def test_llm_usage_directory_is_mounted_to_host(self) -> None:
+        compose = (ROOT / "docker-compose.yml").read_text(encoding="utf-8")
+
+        self.assertIn("./data/llm/usage:/app/data/llm/usage", compose)
+
 
 if __name__ == "__main__":
     unittest.main()

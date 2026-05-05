@@ -133,6 +133,10 @@ class FastApiTests(unittest.TestCase):
             event_log_dir=Path(self.temp_dir.name),
             enable_research_notes=True,
             research_note_dir=self.note_dir,
+            llm_dry_run=True,
+            llm_usage_dir=Path(self.temp_dir.name) / "llm",
+            llm_daily_limit=5,
+            llm_monthly_limit=50,
         )
         self.client = TestClient(create_app(settings))
 
@@ -181,12 +185,15 @@ class FastApiTests(unittest.TestCase):
         body = response.json()
         self.assertEqual(body["severity"], "level_3")
         self.assertEqual(body["research_note"]["created"], True)
+        self.assertEqual(body["llm_usage"]["within_limits"], True)
         notes = list(self.note_dir.glob("*.md"))
         self.assertEqual(len(notes), 1)
         note_text = notes[0].read_text(encoding="utf-8")
         self.assertIn("Generated Research Note Draft", note_text)
         self.assertNotIn("replace-with-local-secret", note_text)
         self.assertNotIn("[REDACTED]", note_text)
+        usage_logs = list((Path(self.temp_dir.name) / "llm").glob("*.jsonl"))
+        self.assertEqual(len(usage_logs), 1)
 
     def test_webhook_rejects_invalid_secret(self) -> None:
         payload = json.loads(

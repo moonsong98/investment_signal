@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException, status
 from investment.alerts import AlertValidationError, validate_tradingview_payload
 from investment.config import Settings
 from investment.logging import JsonlEventLogger
+from investment.llm import UsageLedger, UsageLimits, new_usage_record
 from investment.notifications import TelegramNotifier
 from investment.research import generate_research_note_for_event
 
@@ -63,11 +64,27 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             notification=notification,
         )
         research_note = None
+        usage_summary = None
         if app_settings.enable_research_notes:
-            research_note = generate_research_note_for_event(
-                asdict(logged_event),
-                app_settings.research_note_dir,
+            usage_ledger = UsageLedger(app_settings.llm_usage_dir)
+            usage_summary = usage_ledger.summarize(
+                UsageLimits(
+                    daily_limit=app_settings.llm_daily_limit,
+                    monthly_limit=app_settings.llm_monthly_limit,
+                )
             )
+            if usage_summary.within_limits:
+                research_note = generate_research_note_for_event(
+                    asdict(logged_event),
+                    app_settings.research_note_dir,
+                )
+                if research_note is not None:
+                    usage_ledger.record(
+                        new_usage_record(
+                            event_id=logged_event.event_id,
+                            dry_run=app_settings.llm_dry_run,
+                        )
+                    )
 
         response = {
             "ok": True,
@@ -89,6 +106,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             }
         else:
             response["research_note"] = {"created": False}
+        if usage_summary is not None:
+            response["llm_usage"] = {
+                "daily_count": usage_summary.daily_count,
+                "monthly_count": usage_summary.monthly_count,
+                "within_limits": usage_summary.within_limits,
+            }
         return response
 
     return app
