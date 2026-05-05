@@ -43,6 +43,12 @@ uv run python scripts/build_site.py
 uv run --extra api uvicorn investment.api.app:app --reload --host 127.0.0.1 --port 8000
 ```
 
+Send a safe local sample alert:
+
+```bash
+uv run python scripts/send_sample_alert.py
+```
+
 ## Test
 
 ```bash

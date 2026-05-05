@@ -30,10 +30,11 @@ curl http://127.0.0.1:8000/health
 Send a sample TradingView alert:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/webhooks/tradingview \
-  -H "Content-Type: application/json" \
-  --data @data/samples/tradingview_alert_level2.json
+uv run python scripts/send_sample_alert.py
 ```
+
+The script reads `.env`, injects `TRADINGVIEW_WEBHOOK_SECRET` into the sample
+payload, and does not print the secret.
 
 ## Docker
 
@@ -61,3 +62,7 @@ Do not commit real values.
 - Level 3: accepted, Telegram notification when configured; later LLM analysis target
 - Invalid secret: rejected
 - Malformed payload: rejected
+
+## TradingView Templates
+
+See [`tradingview-alert-templates.md`](tradingview-alert-templates.md).
