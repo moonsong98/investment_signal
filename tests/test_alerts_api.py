@@ -121,6 +121,7 @@ class FastApiTests(unittest.TestCase):
         from investment.api import create_app
 
         self.temp_dir = tempfile.TemporaryDirectory()
+        self.note_dir = Path(self.temp_dir.name) / "research"
         settings = Settings(
             app_env="test",
             tradingview_webhook_secret="replace-with-local-secret",
@@ -128,6 +129,8 @@ class FastApiTests(unittest.TestCase):
             telegram_chat_id=None,
             telegram_dry_run=True,
             event_log_dir=Path(self.temp_dir.name),
+            enable_research_notes=True,
+            research_note_dir=self.note_dir,
         )
         self.client = TestClient(create_app(settings))
 
@@ -150,7 +153,24 @@ class FastApiTests(unittest.TestCase):
         self.assertEqual(body["severity"], "level_2")
         self.assertIn("event_id", body)
         self.assertEqual(body["notification"]["reason"], "dry_run")
+        self.assertEqual(body["research_note"]["created"], False)
         self.assertEqual(len(list(Path(self.temp_dir.name).glob("*.jsonl"))), 1)
+
+    def test_webhook_generates_research_note_for_level_3(self) -> None:
+        payload = json.loads((ROOT / "data/samples/tradingview_alert_level3.json").read_text())
+
+        response = self.client.post("/webhooks/tradingview", json=payload)
+
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["severity"], "level_3")
+        self.assertEqual(body["research_note"]["created"], True)
+        notes = list(self.note_dir.glob("*.md"))
+        self.assertEqual(len(notes), 1)
+        note_text = notes[0].read_text(encoding="utf-8")
+        self.assertIn("Generated Research Note Draft", note_text)
+        self.assertNotIn("replace-with-local-secret", note_text)
+        self.assertNotIn("[REDACTED]", note_text)
 
     def test_webhook_rejects_invalid_secret(self) -> None:
         payload = json.loads(

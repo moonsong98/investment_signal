@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import asdict
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, status
@@ -10,6 +11,7 @@ from investment.alerts import AlertValidationError, validate_tradingview_payload
 from investment.config import Settings
 from investment.logging import JsonlEventLogger
 from investment.notifications import TelegramNotifier
+from investment.research import generate_research_note_for_event
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -44,8 +46,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raw_payload=payload,
             notification=notification,
         )
+        research_note = None
+        if app_settings.enable_research_notes:
+            research_note = generate_research_note_for_event(
+                asdict(logged_event),
+                app_settings.research_note_dir,
+            )
 
-        return {
+        response = {
             "ok": True,
             "event_id": logged_event.event_id,
             "symbol": alert.symbol,
@@ -57,6 +65,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 "reason": notification.reason,
             },
         }
+        if research_note is not None:
+            response["research_note"] = {
+                "created": True,
+                "path": str(research_note.path),
+            }
+        else:
+            response["research_note"] = {"created": False}
+        return response
 
     return app
 

@@ -100,6 +100,24 @@ trading decision.
 """
 
 
+def generate_research_note_for_event(
+    event: dict[str, Any],
+    output_dir: Path | str,
+) -> GeneratedNote | None:
+    if not is_level_3_event(event):
+        return None
+
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    note_path = output_path / note_filename(event)
+    note_path.write_text(render_note(event), encoding="utf-8")
+    return GeneratedNote(
+        event_id=str(event.get("event_id", "")),
+        path=note_path,
+        title=f"{event.get('symbol', 'UNKNOWN')} {event.get('alert_type', 'event')}",
+    )
+
+
 def generate_research_notes(
     event_dir: Path | str,
     output_dir: Path | str,
@@ -109,16 +127,7 @@ def generate_research_notes(
     output_path.mkdir(parents=True, exist_ok=True)
 
     for event in iter_event_logs(event_dir):
-        if not is_level_3_event(event):
-            continue
-        filename = note_filename(event)
-        note_path = output_path / filename
-        note_path.write_text(render_note(event), encoding="utf-8")
-        notes.append(
-            GeneratedNote(
-                event_id=str(event.get("event_id", "")),
-                path=note_path,
-                title=f"{event.get('symbol', 'UNKNOWN')} {event.get('alert_type', 'event')}",
-            )
-        )
+        note = generate_research_note_for_event(event, output_path)
+        if note is not None:
+            notes.append(note)
     return notes

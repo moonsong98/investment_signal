@@ -22,6 +22,8 @@ class Settings:
     telegram_chat_id: str | None
     telegram_dry_run: bool
     event_log_dir: Path
+    enable_research_notes: bool
+    research_note_dir: Path
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -35,4 +37,6 @@ class Settings:
             telegram_chat_id=os.getenv("TELEGRAM_CHAT_ID") or None,
             telegram_dry_run=env_bool("TELEGRAM_DRY_RUN", True),
             event_log_dir=Path(os.getenv("EVENT_LOG_DIR", "data/events")),
+            enable_research_notes=env_bool("ENABLE_RESEARCH_NOTES", True),
+            research_note_dir=Path(os.getenv("RESEARCH_NOTE_DIR", "content/research")),
         )
