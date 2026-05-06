@@ -1,0 +1,11 @@
+{
+  "secret": "replace-with-local-secret",
+  "source": "tradingview",
+  "symbol": "SOL",
+  "asset_type": "crypto",
+  "timeframe": "1D",
+  "alert_type": "breakout_20d_high",
+  "event_at": "2026-05-06T00:10:00Z",
+  "price": 155.0,
+  "message": "BINANCE:SOLUSDT 20-day high breakout"
+}

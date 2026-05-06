@@ -33,6 +33,23 @@ class AlertValidationTests(unittest.TestCase):
         self.assertEqual(alert.severity, Severity.LEVEL_2)
         self.assertEqual(len(alert.dedupe_key), 64)
 
+    def test_crypto_sample_payloads_are_valid_level_2_events(self) -> None:
+        for sample_name, expected_symbol in [
+            ("tradingview_alert_btc_breakout.json", "BTC"),
+            ("tradingview_alert_eth_breakout.json", "ETH"),
+            ("tradingview_alert_sol_breakout.json", "SOL"),
+        ]:
+            with self.subTest(sample_name=sample_name):
+                payload = self.load_payload(sample_name)
+
+                alert = validate_tradingview_payload(
+                    payload,
+                    expected_secret="replace-with-local-secret",
+                )
+
+                self.assertEqual(alert.symbol, expected_symbol)
+                self.assertEqual(alert.severity, Severity.LEVEL_2)
+
     def test_invalid_secret_rejected(self) -> None:
         payload = self.load_payload("tradingview_alert_invalid_secret.json")
 

@@ -70,3 +70,6 @@ terminal.
 ## TradingView Templates
 
 See [`tradingview-alert-templates.md`](tradingview-alert-templates.md).
+
+For the end-to-end TradingView alert setup checklist, see
+[`tradingview-setup.md`](tradingview-setup.md).

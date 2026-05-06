@@ -1,0 +1,11 @@
+{
+  "secret": "replace-with-local-secret",
+  "source": "tradingview",
+  "symbol": "ETH",
+  "asset_type": "crypto",
+  "timeframe": "1D",
+  "alert_type": "breakout_20d_high",
+  "event_at": "2026-05-06T00:05:00Z",
+  "price": 3200.0,
+  "message": "BINANCE:ETHUSDT 20-day high breakout"
+}

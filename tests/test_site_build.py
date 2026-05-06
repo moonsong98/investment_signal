@@ -69,10 +69,11 @@ class SiteBuildTests(unittest.TestCase):
 
             self.assertNotIn("secret", serialized)
             self.assertNotIn("replace-with-local-secret", serialized)
-            self.assertEqual(
-                [event["severity"] for event in events],
-                ["level_1", "level_2", "level_3"],
-            )
+            severities = {event["severity"] for event in events}
+            symbols = {event["symbol"] for event in events}
+
+            self.assertTrue({"level_1", "level_2", "level_3"}.issubset(severities))
+            self.assertTrue({"BTC", "ETH", "SOL"}.issubset(symbols))
 
     def test_events_json_uses_redacted_event_logs_when_available(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

@@ -49,6 +49,12 @@ Send a safe local sample alert:
 uv run python scripts/send_sample_alert.py
 ```
 
+TradingView setup checklist:
+
+```text
+docs/tradingview-setup.md
+```
+
 Generate Level 3 research note drafts:
 
 ```bash

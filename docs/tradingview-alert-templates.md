@@ -12,13 +12,14 @@ https://your-public-url/webhooks/tradingview
 
 ## Crypto Breakout
 
-Use for BTC, ETH, and SOL alerts.
+Use for BTC, ETH, and SOL alerts. Set `symbol` manually to the canonical
+watchlist symbol instead of using `{{ticker}}`.
 
 ```json
 {
   "secret": "YOUR_SECRET_FROM_ENV",
   "source": "tradingview",
-  "symbol": "{{ticker}}",
+  "symbol": "BTC",
   "asset_type": "crypto",
   "timeframe": "{{interval}}",
   "alert_type": "breakout_20d_high",
@@ -34,7 +35,7 @@ Use for BTC, ETH, and SOL alerts.
 {
   "secret": "YOUR_SECRET_FROM_ENV",
   "source": "tradingview",
-  "symbol": "{{ticker}}",
+  "symbol": "BTC",
   "asset_type": "crypto",
   "timeframe": "{{interval}}",
   "alert_type": "support_breakdown",
@@ -57,6 +58,22 @@ Use for BTC, ETH, and SOL alerts.
   "event_at": "{{time}}",
   "price": {{close}},
   "message": "{{exchange}}:{{ticker}} 20-day high breakout"
+}
+```
+
+## 200-Day Moving Average Breakdown
+
+```json
+{
+  "secret": "YOUR_SECRET_FROM_ENV",
+  "source": "tradingview",
+  "symbol": "SPY",
+  "asset_type": "etf",
+  "timeframe": "{{interval}}",
+  "alert_type": "breakdown_200d_ma",
+  "event_at": "{{time}}",
+  "price": {{close}},
+  "message": "{{exchange}}:{{ticker}} broke below the 200-day moving average"
 }
 ```
 
