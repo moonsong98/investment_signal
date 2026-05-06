@@ -51,9 +51,10 @@ Start with a small set of high-signal alerts:
 - `SPY` daily major drawdown or 200-day moving average breakdown
 - `DXY` daily FX spike or macro regime signal
 
-For crypto alerts, set `symbol` explicitly to `BTC`, `ETH`, or `SOL`. Avoid
-using `{{ticker}}` for the canonical symbol field because exchanges may produce
-values such as `BTCUSDT`, which will not match the watchlist item named `BTC`.
+For crypto alerts, prefer setting `symbol` explicitly to `BTC`, `ETH`, or `SOL`.
+The watchlist also includes common aliases such as `BTCUSDT` and
+`BINANCE:BTCUSDT`, so research-note context can still be matched when an alert
+uses a TradingView exchange ticker.
 
 ## Pine Script Starter
 
@@ -119,4 +120,3 @@ If `event_count` does not change, check the FastAPI container logs:
 ```bash
 docker compose logs webhook-api
 ```
-

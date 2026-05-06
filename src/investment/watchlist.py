@@ -22,4 +22,7 @@ def find_watchlist_item(
     for item in watchlist:
         if str(item.get("symbol", "")).strip().upper() == normalized:
             return item
+        aliases = {str(alias).strip().upper() for alias in item.get("aliases", [])}
+        if normalized in aliases:
+            return item
     return None

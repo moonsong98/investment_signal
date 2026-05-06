@@ -23,6 +23,17 @@ class WatchlistTests(unittest.TestCase):
         self.assertEqual(btc["name"], "Bitcoin")
         self.assertEqual(eth["asset_type"], "crypto")
 
+    def test_find_watchlist_item_matches_aliases(self) -> None:
+        watchlist = load_watchlist(ROOT / "data/watchlists/watchlist.example.json")
+
+        btc = find_watchlist_item("BINANCE:BTCUSDT", watchlist)
+        sol = find_watchlist_item("solusdt", watchlist)
+
+        self.assertIsNotNone(btc)
+        self.assertIsNotNone(sol)
+        self.assertEqual(btc["symbol"], "BTC")
+        self.assertEqual(sol["symbol"], "SOL")
+
     def test_missing_watchlist_returns_empty_list(self) -> None:
         watchlist = load_watchlist(ROOT / "data/watchlists/missing.json")
 

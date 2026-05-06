@@ -326,6 +326,7 @@ def build_watchlist() -> None:
             "market": item["market"],
             "currency": item["currency"],
             "priority": item["priority"],
+            "aliases": item.get("aliases", []),
             "tags": item["tags"],
             "active": item["active"],
         }

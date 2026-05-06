@@ -7,6 +7,7 @@
     "currency": "USD",
     "thesis": "Broad US equity market risk and trend proxy.",
     "risk_notes": "Macro sensitivity, valuation compression, liquidity shocks.",
+    "aliases": ["AMEX:SPY"],
     "tags": ["index", "risk-on"],
     "priority": 1,
     "active": true
@@ -19,6 +20,7 @@
     "currency": "USD",
     "thesis": "Dollar strength indicator for liquidity and FX pressure.",
     "risk_notes": "Symbol availability differs by data provider.",
+    "aliases": ["TVC:DXY"],
     "tags": ["fx", "macro", "liquidity"],
     "priority": 1,
     "active": true
@@ -31,6 +33,7 @@
     "currency": "USD",
     "thesis": "Primary crypto market risk proxy and digital asset liquidity indicator.",
     "risk_notes": "High volatility, regulatory uncertainty, liquidity cycles, custody and market structure risk.",
+    "aliases": ["BTCUSD", "BTCUSDT", "BINANCE:BTCUSDT", "COINBASE:BTCUSD"],
     "tags": ["crypto", "bitcoin", "risk-on", "liquidity"],
     "priority": 1,
     "active": true
@@ -43,6 +46,7 @@
     "currency": "USD",
     "thesis": "Major smart contract platform and crypto risk appetite proxy.",
     "risk_notes": "High volatility, regulatory uncertainty, protocol risk, liquidity cycles.",
+    "aliases": ["ETHUSD", "ETHUSDT", "BINANCE:ETHUSDT", "COINBASE:ETHUSD"],
     "tags": ["crypto", "smart-contracts", "risk-on"],
     "priority": 2,
     "active": true
@@ -55,6 +59,7 @@
     "currency": "USD",
     "thesis": "High-throughput blockchain ecosystem and speculative growth proxy.",
     "risk_notes": "High volatility, ecosystem concentration, outages, regulatory uncertainty.",
+    "aliases": ["SOLUSD", "SOLUSDT", "BINANCE:SOLUSDT", "COINBASE:SOLUSD"],
     "tags": ["crypto", "smart-contracts", "growth"],
     "priority": 2,
     "active": true
