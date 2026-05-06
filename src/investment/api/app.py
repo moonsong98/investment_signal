@@ -77,6 +77,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 research_note = generate_research_note_for_event(
                     asdict(logged_event),
                     app_settings.research_note_dir,
+                    watchlist_path=app_settings.watchlist_path,
                 )
                 if research_note is not None:
                     usage_ledger.record(

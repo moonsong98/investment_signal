@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from investment.llm import AnalysisPolicy, EventAnalysis, analyze_event
+from investment.watchlist import find_watchlist_item, load_watchlist
 
 
 NOTE_HEADER = "Generated Research Note Draft"
@@ -67,7 +68,32 @@ LLM Used: {str(analysis.llm_used).lower()}
 """
 
 
-def render_note(event: dict[str, Any], analysis: EventAnalysis | None = None) -> str:
+def render_watchlist_context(watchlist_item: dict[str, Any] | None) -> str:
+    if watchlist_item is None:
+        return """## Watchlist Context
+
+No matching watchlist item was found. Review whether this symbol should be added
+or whether the alert should be ignored.
+"""
+
+    tags = ", ".join(str(tag) for tag in watchlist_item.get("tags", []))
+    return f"""## Watchlist Context
+
+- Name: {watchlist_item.get("name", "")}
+- Market: {watchlist_item.get("market", "")}
+- Currency: {watchlist_item.get("currency", "")}
+- Priority: {watchlist_item.get("priority", "")}
+- Tags: {tags}
+- Thesis: {watchlist_item.get("thesis", "")}
+- Risk Notes: {watchlist_item.get("risk_notes", "")}
+"""
+
+
+def render_note(
+    event: dict[str, Any],
+    analysis: EventAnalysis | None = None,
+    watchlist_item: dict[str, Any] | None = None,
+) -> str:
     payload = event.get("payload") or {}
     symbol = str(event.get("symbol", "UNKNOWN"))
     alert_type = str(event.get("alert_type", "unknown_event"))
@@ -80,6 +106,7 @@ def render_note(event: dict[str, Any], analysis: EventAnalysis | None = None) ->
     price = payload.get("price")
     event_analysis = analysis or analyze_event(event, AnalysisPolicy())
     analysis_section = render_analysis(event_analysis)
+    watchlist_section = render_watchlist_context(watchlist_item)
 
     price_line = f"\n- Price: {price}" if price is not None else ""
     return f"""# {NOTE_HEADER}: {symbol} {alert_type}
@@ -98,6 +125,8 @@ LLM Used: {str(event_analysis.llm_used).lower()}
 - Event Time: {event_at}
 - Received Time: {received_at}{price_line}
 - Message: {message}
+
+{watchlist_section}
 
 {analysis_section}
 
@@ -129,6 +158,7 @@ def generate_research_note_for_event(
     event: dict[str, Any],
     output_dir: Path | str,
     analysis_policy: AnalysisPolicy | None = None,
+    watchlist_path: Path | str | None = None,
 ) -> GeneratedNote | None:
     if not is_level_3_event(event):
         return None
@@ -137,7 +167,13 @@ def generate_research_note_for_event(
     output_path.mkdir(parents=True, exist_ok=True)
     note_path = output_path / note_filename(event)
     analysis = analyze_event(event, analysis_policy or AnalysisPolicy())
-    note_path.write_text(render_note(event, analysis), encoding="utf-8")
+    watchlist_item = None
+    if watchlist_path is not None:
+        watchlist_item = find_watchlist_item(
+            str(event.get("symbol", "")),
+            load_watchlist(watchlist_path),
+        )
+    note_path.write_text(render_note(event, analysis, watchlist_item), encoding="utf-8")
     return GeneratedNote(
         event_id=str(event.get("event_id", "")),
         path=note_path,
@@ -149,13 +185,19 @@ def generate_research_notes(
     event_dir: Path | str,
     output_dir: Path | str,
     analysis_policy: AnalysisPolicy | None = None,
+    watchlist_path: Path | str | None = None,
 ) -> list[GeneratedNote]:
     notes: list[GeneratedNote] = []
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
     for event in iter_event_logs(event_dir):
-        note = generate_research_note_for_event(event, output_path, analysis_policy)
+        note = generate_research_note_for_event(
+            event,
+            output_path,
+            analysis_policy,
+            watchlist_path,
+        )
         if note is not None:
             notes.append(note)
     return notes

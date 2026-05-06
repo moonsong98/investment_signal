@@ -57,6 +57,7 @@ class ResearchNoteGeneratorTests(unittest.TestCase):
             self.assertIn("Generated Research Note Draft", note_text)
             self.assertIn("Human Review: required", note_text)
             self.assertIn("LLM Used: false", note_text)
+            self.assertIn("No matching watchlist item was found", note_text)
             self.assertIn("## Analysis Draft", note_text)
             self.assertIn("not as a trade decision", note_text)
             self.assertIn("Do not place live orders", note_text)
@@ -81,6 +82,42 @@ class ResearchNoteGeneratorTests(unittest.TestCase):
             self.assertNotIn("secret", note_text.lower())
             self.assertNotIn("token", note_text.lower())
             self.assertNotIn("[REDACTED]", note_text)
+
+    def test_generated_note_includes_watchlist_context(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            event_dir = root / "events"
+            output_dir = root / "research"
+            watchlist_path = root / "watchlist.json"
+            event_dir.mkdir()
+            watchlist_path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "symbol": "BTC",
+                            "name": "Bitcoin",
+                            "market": "GLOBAL",
+                            "currency": "USD",
+                            "priority": 1,
+                            "tags": ["crypto"],
+                            "thesis": "Primary crypto market risk proxy.",
+                            "risk_notes": "High volatility.",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            event_dir.joinpath("2026-05-06.jsonl").write_text(
+                json.dumps(event_payload("level_3")) + "\n",
+                encoding="utf-8",
+            )
+
+            notes = generate_research_notes(event_dir, output_dir, watchlist_path=watchlist_path)
+            note_text = notes[0].path.read_text(encoding="utf-8")
+
+            self.assertIn("## Watchlist Context", note_text)
+            self.assertIn("Primary crypto market risk proxy.", note_text)
+            self.assertIn("High volatility.", note_text)
 
 
 if __name__ == "__main__":

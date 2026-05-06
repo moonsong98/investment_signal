@@ -131,6 +131,7 @@ class FastApiTests(unittest.TestCase):
             telegram_chat_id=None,
             telegram_dry_run=True,
             event_log_dir=Path(self.temp_dir.name),
+            watchlist_path=ROOT / "data/watchlists/watchlist.example.json",
             enable_research_notes=True,
             research_note_dir=self.note_dir,
             llm_dry_run=True,
@@ -190,6 +191,7 @@ class FastApiTests(unittest.TestCase):
         self.assertEqual(len(notes), 1)
         note_text = notes[0].read_text(encoding="utf-8")
         self.assertIn("Generated Research Note Draft", note_text)
+        self.assertIn("No matching watchlist item was found", note_text)
         self.assertNotIn("replace-with-local-secret", note_text)
         self.assertNotIn("[REDACTED]", note_text)
         usage_logs = list((Path(self.temp_dir.name) / "llm").glob("*.jsonl"))
