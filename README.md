@@ -76,6 +76,12 @@ Scan public output before publishing:
 uv run python scripts/check_public_output.py
 ```
 
+Check local operation status:
+
+```bash
+uv run python scripts/ops_status.py
+```
+
 ## Roadmap
 
 See [`docs/roadmap.md`](docs/roadmap.md).
