@@ -19,6 +19,15 @@ The command is secret-safe. It reports:
 - generated draft count
 - LLM usage ledger record count
 
+Print recent local event summaries:
+
+```bash
+uv run python scripts/tail_events.py --limit 5
+```
+
+The command reads ignored local JSONL logs and prints only selected redacted
+fields. It does not print webhook secrets, dedupe keys, or raw payloads.
+
 ## Local Server
 
 Start or rebuild:
