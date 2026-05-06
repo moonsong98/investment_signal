@@ -10,6 +10,12 @@ Webhook URL:
 https://your-public-url/webhooks/tradingview
 ```
 
+Recommended copyable messages can be generated with:
+
+```bash
+uv run python scripts/render_tradingview_alerts.py
+```
+
 ## Crypto Breakout
 
 Use for BTC, ETH, and SOL alerts. Set `symbol` manually to the canonical

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "btc_breakout_20d_high_1d",
+    "symbol": "BTC",
+    "asset_type": "crypto",
+    "timeframe": "{{interval}}",
+    "alert_type": "breakout_20d_high",
+    "message": "{{exchange}}:{{ticker}} 20-day high breakout"
+  },
+  {
+    "id": "btc_breakdown_200d_ma_1d",
+    "symbol": "BTC",
+    "asset_type": "crypto",
+    "timeframe": "{{interval}}",
+    "alert_type": "breakdown_200d_ma",
+    "message": "{{exchange}}:{{ticker}} broke below the 200-day moving average"
+  },
+  {
+    "id": "eth_breakout_20d_high_1d",
+    "symbol": "ETH",
+    "asset_type": "crypto",
+    "timeframe": "{{interval}}",
+    "alert_type": "breakout_20d_high",
+    "message": "{{exchange}}:{{ticker}} 20-day high breakout"
+  },
+  {
+    "id": "sol_breakout_20d_high_1d",
+    "symbol": "SOL",
+    "asset_type": "crypto",
+    "timeframe": "{{interval}}",
+    "alert_type": "breakout_20d_high",
+    "message": "{{exchange}}:{{ticker}} 20-day high breakout"
+  },
+  {
+    "id": "spy_breakdown_200d_ma_1d",
+    "symbol": "SPY",
+    "asset_type": "etf",
+    "timeframe": "{{interval}}",
+    "alert_type": "breakdown_200d_ma",
+    "message": "{{exchange}}:{{ticker}} broke below the 200-day moving average"
+  },
+  {
+    "id": "dxy_fx_spike_1d",
+    "symbol": "DXY",
+    "asset_type": "macro",
+    "timeframe": "{{interval}}",
+    "alert_type": "fx_spike",
+    "message": "{{exchange}}:{{ticker}} dollar index spike"
+  }
+]

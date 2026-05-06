@@ -40,6 +40,30 @@ In TradingView, open a chart and create an alert.
 Do not paste the real webhook secret into screenshots, docs, GitHub issues, or
 commits.
 
+## Render Copyable Messages
+
+Render the recommended TradingView messages locally:
+
+```bash
+uv run python scripts/render_tradingview_alerts.py
+```
+
+Render only BTC messages:
+
+```bash
+uv run python scripts/render_tradingview_alerts.py --symbol BTC
+```
+
+Render one specific message:
+
+```bash
+uv run python scripts/render_tradingview_alerts.py --id btc_breakout_20d_high_1d
+```
+
+The renderer always uses `YOUR_SECRET_FROM_ENV` as a placeholder. Replace that
+placeholder inside TradingView only. The command does not read `.env` and does
+not print real secrets.
+
 ## Recommended First Alerts
 
 Start with a small set of high-signal alerts:

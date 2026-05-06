@@ -55,6 +55,12 @@ TradingView setup checklist:
 docs/tradingview-setup.md
 ```
 
+Render copyable TradingView alert messages:
+
+```bash
+uv run python scripts/render_tradingview_alerts.py
+```
+
 Generate Level 3 research note drafts:
 
 ```bash
