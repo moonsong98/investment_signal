@@ -64,6 +64,13 @@ The renderer always uses `YOUR_SECRET_FROM_ENV` as a placeholder. Replace that
 placeholder inside TradingView only. The command does not read `.env` and does
 not print real secrets.
 
+Check that the recommended catalog still matches the watchlist and severity
+policy:
+
+```bash
+uv run python scripts/check_tradingview_catalog.py
+```
+
 ## Recommended First Alerts
 
 Start with a small set of high-signal alerts:

@@ -61,6 +61,12 @@ Render copyable TradingView alert messages:
 uv run python scripts/render_tradingview_alerts.py
 ```
 
+Check TradingView alert catalog consistency:
+
+```bash
+uv run python scripts/check_tradingview_catalog.py
+```
+
 Generate Level 3 research note drafts:
 
 ```bash
