@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 from hashlib import sha256
+import re
 from typing import Any
 
 from investment.models import AssetType, EventSource, Severity
@@ -21,6 +22,11 @@ REQUIRED_FIELDS = {
     "event_at",
     "message",
 }
+
+SYMBOL_PATTERN = re.compile(r"^[A-Z0-9:._/-]{1,32}$")
+TIMEFRAME_PATTERN = re.compile(r"^[A-Za-z0-9]{1,16}$")
+ALERT_TYPE_PATTERN = re.compile(r"^[a-z0-9_]{1,64}$")
+MAX_MESSAGE_LENGTH = 500
 
 
 class AlertValidationError(ValueError):
@@ -73,6 +79,42 @@ def parse_event_time(value: Any) -> datetime:
     return parsed
 
 
+def validate_symbol(value: str) -> str:
+    normalized = value.strip().upper()
+    if not normalized:
+        raise AlertValidationError("symbol must not be empty")
+    if not SYMBOL_PATTERN.fullmatch(normalized):
+        raise AlertValidationError("symbol contains unsupported characters or is too long")
+    return normalized
+
+
+def validate_timeframe(value: str) -> str:
+    normalized = value.strip()
+    if not normalized:
+        raise AlertValidationError("timeframe must not be empty")
+    if not TIMEFRAME_PATTERN.fullmatch(normalized):
+        raise AlertValidationError("timeframe contains unsupported characters or is too long")
+    return normalized
+
+
+def validate_alert_type(value: str) -> str:
+    normalized = value.strip().lower()
+    if not normalized:
+        raise AlertValidationError("alert_type must not be empty")
+    if not ALERT_TYPE_PATTERN.fullmatch(normalized):
+        raise AlertValidationError("alert_type contains unsupported characters or is too long")
+    return normalized
+
+
+def validate_message(value: str) -> str:
+    normalized = value.strip()
+    if not normalized:
+        raise AlertValidationError("message must not be empty")
+    if len(normalized) > MAX_MESSAGE_LENGTH:
+        raise AlertValidationError("message is too long")
+    return normalized
+
+
 def validate_tradingview_payload(
     payload: dict[str, Any],
     expected_secret: str,
@@ -96,18 +138,10 @@ def validate_tradingview_payload(
     except ValueError as exc:
         raise AlertValidationError("asset_type is not supported") from exc
 
-    symbol = str(payload["symbol"]).strip().upper()
-    timeframe = str(payload["timeframe"]).strip()
-    alert_type = str(payload["alert_type"]).strip().lower()
-    message = str(payload["message"]).strip()
-    if not symbol:
-        raise AlertValidationError("symbol must not be empty")
-    if not timeframe:
-        raise AlertValidationError("timeframe must not be empty")
-    if not alert_type:
-        raise AlertValidationError("alert_type must not be empty")
-    if not message:
-        raise AlertValidationError("message must not be empty")
+    symbol = validate_symbol(str(payload["symbol"]))
+    timeframe = validate_timeframe(str(payload["timeframe"]))
+    alert_type = validate_alert_type(str(payload["alert_type"]))
+    message = validate_message(str(payload["message"]))
 
     price = payload.get("price")
     if price is not None:

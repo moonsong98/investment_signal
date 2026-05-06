@@ -66,6 +66,7 @@ terminal.
 - Level 3: accepted, Telegram notification when configured; later LLM analysis target
 - Invalid secret: rejected
 - Malformed payload: rejected
+- Unsupported symbol, timeframe, alert type, or overlong message: rejected before logging
 
 ## TradingView Templates
 

@@ -69,6 +69,47 @@ class AlertValidationTests(unittest.TestCase):
                 expected_secret="replace-with-local-secret",
             )
 
+    def test_exchange_prefixed_symbol_is_allowed(self) -> None:
+        payload = self.load_payload("tradingview_alert_btc_breakout.json")
+        payload["symbol"] = "BINANCE:BTCUSDT"
+
+        alert = validate_tradingview_payload(
+            payload,
+            expected_secret="replace-with-local-secret",
+        )
+
+        self.assertEqual(alert.symbol, "BINANCE:BTCUSDT")
+
+    def test_unsupported_symbol_characters_are_rejected(self) -> None:
+        payload = self.load_payload("tradingview_alert_level2.json")
+        payload["symbol"] = "SPY<script>"
+
+        with self.assertRaises(AlertValidationError):
+            validate_tradingview_payload(
+                payload,
+                expected_secret="replace-with-local-secret",
+            )
+
+    def test_unsupported_alert_type_characters_are_rejected(self) -> None:
+        payload = self.load_payload("tradingview_alert_level2.json")
+        payload["alert_type"] = "breakout-20d-high"
+
+        with self.assertRaises(AlertValidationError):
+            validate_tradingview_payload(
+                payload,
+                expected_secret="replace-with-local-secret",
+            )
+
+    def test_overlong_message_is_rejected(self) -> None:
+        payload = self.load_payload("tradingview_alert_level2.json")
+        payload["message"] = "x" * 501
+
+        with self.assertRaises(AlertValidationError):
+            validate_tradingview_payload(
+                payload,
+                expected_secret="replace-with-local-secret",
+            )
+
 
 class NotificationTests(unittest.TestCase):
     def test_level_1_does_not_notify(self) -> None:
