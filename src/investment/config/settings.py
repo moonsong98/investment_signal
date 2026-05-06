@@ -7,6 +7,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
+LOCAL_APP_ENVS = {"local", "test", "dev", "development"}
+PLACEHOLDER_WEBHOOK_SECRETS = {"replace-with-local-secret", "YOUR_SECRET_FROM_ENV"}
+
+
 def env_bool(name: str, default: bool) -> bool:
     value = os.getenv(name)
     if value is None:
@@ -29,6 +33,16 @@ class Settings:
     llm_usage_dir: Path
     llm_daily_limit: int
     llm_monthly_limit: int
+
+    def __post_init__(self) -> None:
+        app_env = self.app_env.strip().lower()
+        secret = self.tradingview_webhook_secret.strip()
+        if not secret:
+            raise ValueError("TRADINGVIEW_WEBHOOK_SECRET must not be empty")
+        if app_env not in LOCAL_APP_ENVS and secret in PLACEHOLDER_WEBHOOK_SECRETS:
+            raise ValueError(
+                "TRADINGVIEW_WEBHOOK_SECRET must be changed outside local/test environments"
+            )
 
     @classmethod
     def from_env(cls) -> "Settings":

@@ -15,6 +15,9 @@ TRADINGVIEW_WEBHOOK_SECRET=replace-with-local-secret
 TELEGRAM_DRY_RUN=true
 ```
 
+The placeholder webhook secret is allowed only for `APP_ENV=local`, `test`,
+`dev`, or `development`. Any non-local deployment must use a real secret value.
+
 Run the API:
 
 ```bash
