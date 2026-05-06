@@ -88,6 +88,12 @@ Check local operation status:
 uv run python scripts/ops_status.py
 ```
 
+List ignored local runtime outputs:
+
+```bash
+uv run python scripts/local_cleanup.py
+```
+
 ## Roadmap
 
 See [`docs/roadmap.md`](docs/roadmap.md).

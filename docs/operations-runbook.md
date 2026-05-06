@@ -59,3 +59,21 @@ uv run python scripts/check_public_output.py
 
 Only commit public output after confirming it does not include smoke-test events,
 private notes, account data, or secrets.
+
+## Local Cleanup
+
+List ignored runtime outputs without deleting them:
+
+```bash
+uv run python scripts/local_cleanup.py
+```
+
+Remove the listed local outputs only when you intentionally want a clean local
+workspace:
+
+```bash
+uv run python scripts/local_cleanup.py --apply
+```
+
+This removes ignored event logs, LLM usage ledgers, generated draft notes, and
+Python cache directories. It does not remove `.env`.
